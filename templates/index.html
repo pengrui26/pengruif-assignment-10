@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Image Search</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Image Search</h1>
+    <form
+      action="{{ url_for('index') }}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <p>Text Query (optional): <input type="text" name="text_query" /></p>
+      <p>
+        Image Query (optional):
+        <input type="file" name="image_query" accept="image/*" />
+      </p>
+      <p>
+        Weight (0.0 ~ 1.0, used if both text & image provided):
+        <input type="text" name="lam" />
+      </p>
+      <p>
+        Use PCA with top k components? (leave blank for no PCA):
+        <input type="text" name="pca_k" />
+      </p>
+      <input type="submit" value="Search" />
+    </form>
+
+    {% if results %}
+    <h2>Results</h2>
+    <ul>
+      {% for r in results %}
+      <li>
+        <p><strong>Image:</strong> {{ r.file_name }}</p>
+        <p><strong>Similarity:</strong> {{ r.similarity }}</p>
+        <img
+          src="{{ url_for('static', filename='coco_images_resized/' + r.file_name) }}"
+          alt="{{ r.file_name }}"
+          style="max-width: 200px"
+        />
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </body>
+</html>
